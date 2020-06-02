@@ -44,8 +44,8 @@ export default {
     return {
       options: ['教师', '助教'],
       form: {
-        phoneNumber: '13729890373',
-        password: '111111',
+        phoneNumber: '13247662414',
+        password: '222222',
         type: '教师',
         tAssistantCode: '178493'
       }
@@ -80,6 +80,7 @@ export default {
             this.beAssistant()
           } else if (this.form.type === '教师') {
             this.saveUserInfo()
+            this.$router.push('/course')
             this.$message({
               message: '登录成功',
               type: 'success'

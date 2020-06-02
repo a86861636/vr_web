@@ -50,10 +50,13 @@ export default new Vuex.Store({
       let url = data.url
       delete data.url
       return new Promise((resolve, reject) => {
-        axios(state.baseURL + url, {
+        axios({
+          url: state.baseURL + url, // 请求地址
+          method: 'get', // post或者get
+          headers: {// 请求头部
+            'AUTHORIZATION': state.userInfo.token || ''
+          },
           params: data
-        }, {
-          'AUTHORIZATION': state.userInfo.token || ''
         }).then(res => {
           resolve(res.data)
         }).catch(error => {

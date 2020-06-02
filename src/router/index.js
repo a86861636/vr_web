@@ -1,19 +1,38 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/views/login/login'
-import Course from '@/views/course/course'
+import Layout from '@/layout'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Login',
-      component: Login
+      path: '/login',
+      name: '登陆',
+      component: () => import('@/views/login/login')
     }, {
-      path: '/course',
-      name: 'Course',
-      component: Course
+      path: '/',
+      name: '首页',
+      component: Layout,
+      children: [{
+        path: '/course',
+        name: '课程表',
+        component: () => import('@/views/course/course')
+      }, {
+        name: '课内功能',
+        path: '/exam/functionIndex',
+        component: () => import('@/views/classFunction/functionIndex'),
+        children: [
+          {
+            name: '名单',
+            path: '/classFunction/rollRecord',
+            component: () => import('@/views/classFunction/rollRecord/rollRecord')
+          }, {
+            name: '试卷',
+            path: '/classFunction/examList',
+            component: () => import('@/views/classFunction/exam/examList')
+          }
+        ]
+      }]
     }
   ]
 })
