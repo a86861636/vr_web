@@ -19,7 +19,7 @@ export default new Router({
         component: () => import('@/views/course/course')
       }, {
         name: '课内功能',
-        path: '/exam/functionIndex',
+        path: '/classFunction/index',
         component: () => import('@/views/classFunction/functionIndex'),
         children: [
           {

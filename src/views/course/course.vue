@@ -32,7 +32,7 @@
             <td>
               <p>{{'第' + digital2Chinese(courseNum) + "节"}}</p>
             </td>
-            <td v-for="(weekNum, weekIndex) in weeks" :key="weekIndex" @click="toClassFunction(weekNum, weekIndex)">
+            <td v-for="(weekNum, weekIndex) in weeks" :key="weekIndex" @click="toClassFunction(fieldCharacter(weekIndex, courseIndex, true))">
               {{ fieldCharacter(weekIndex, courseIndex) }}
             </td>
           </tr>
@@ -60,9 +60,7 @@ export default {
         weekCourse: [
           {
             week: 1,
-            courses: [
-              // {section: 3, subject: '生物'},
-            ]
+            courses: []
           },
           {
             week: 2,
@@ -89,21 +87,12 @@ export default {
             courses: []
           }
         ],
-        courseDtailsList: [
-          // {
-          //   week: 1,
-          //   subject: "测试课程",
-          //   section: 1,2
-          // }
-        ]
+        courseDtailsList: []
       }
     }
   },
   created () {
     this.getdate(this.getFullDate(), true)
-    this.updateData()
-    this.initWeekCourses()
-    console.log(this.classTableData.weekCourse)
   },
   methods: {
     /**
@@ -112,12 +101,14 @@ export default {
        *  @param {Boolean} first 第一次获取
        * */
     getdate (date, first) {
+      // console.log(this.classTableData.weekCourse)
       let data = {
         url: 'schedule/theweek/47/' + date + '/',
         user_id: 47,
         semester_id: this.currentTerm.id || ''
       }
       this.$store.dispatch('get', data).then((res) => {
+        // console.log(res)
         this.calendar = res.calendar
         this.classTableData.courseDtailsList = res.courseDtailsList
         if (first) {
@@ -126,24 +117,25 @@ export default {
           this.currentTermDate = this.termList[0].semesterdate_id
           this.currentTerm = this.termList[0]
         }
+
         for (let j of this.classTableData.weekCourse) {
           j.courses = []
           for (let i of this.classTableData.courseDtailsList) {
             if (i.week === j.week) {
               let arr = []
               arr = i.section.split(',')
-
-              if (arr.length > 1) {
-                for (let x of this.getarr(arr)) {
-                  let obj = {}
-                  obj.subject = i.subject
-                  obj.section = x
-                  j.courses.push(obj)
-                }
+              for (let x of this.getarr(arr)) {
+                let obj = {}
+                obj.info = i
+                obj.subject = i.subject
+                obj.section = x
+                j.courses.push(obj)
               }
             }
           }
         }
+        this.updateData()
+        this.initWeekCourses()
       })
     },
     /**
@@ -166,8 +158,9 @@ export default {
         }
       }
 
-      console.log(JSON.stringify(this.classTableData.weekCourse))
+      // console.log(JSON.stringify(this.classTableData.weekCourse))
     },
+
     /**
        * 计算周数据及课节数
        */
@@ -175,13 +168,12 @@ export default {
       const that = this
       this.weeks = [] // 周集合
       this.coursesLen = 0 // 最大的课节数
-
-      this.weeks = this.classTableData.weekCourse.map((item, section) => {
+      this.weeks = this.classTableData.weekCourse.map((item, index) => {
         for (let k in item) {
           if (k === 'courses') {
             let maxCoursesLen = 0
             /* 取出一周中最大的课节数及当天的最大课节数 */
-            for (let j of item[k]) {
+            for (let j of item.courses) {
               j.section > that.coursesLen && (that.coursesLen = j.section) // 取所有一周里最大课节值
               j.section > maxCoursesLen && (maxCoursesLen = j.section) // 取当天最大课节值
             }
@@ -196,32 +188,33 @@ export default {
             }
           }
         }
-        this.coursesLen = 13// 最大的课节数
+        this.coursesLen = 13
         return item.week
       })
-
-      // console.log(JSON.stringify(this.classTableData.weekCourse));
     },
+
     /**
        * 处理格子数据，无数据转换为字符串'-'
        * @param {Number} weekIndex 周几对应的下标
        * @param {Number} courseNum 第几节课对应的下标
        * @returns {String} 返回对应的字符
        */
-    fieldCharacter (weekIndex, courseIndex, getCourseId) {
+    fieldCharacter (weekIndex, courseIndex, getInfo) {
+      // 要在判断前把接口重新排序好
+      this.sortarr(this.classTableData.weekCourse[weekIndex], courseIndex)
       if (
         this.classTableData.weekCourse[weekIndex] &&
           this.classTableData.weekCourse[weekIndex].courses[courseIndex] &&
           this.classTableData.weekCourse[weekIndex].courses[courseIndex].section === courseIndex + 1
+          // this.classTableData.weekCourse[weekIndex] === courseIndex
       ) {
-        if (getCourseId) {
-          return this.classTableData.weekCourse[weekIndex].courses[courseIndex].subject
+        if (getInfo) {
+          return this.classTableData.weekCourse[weekIndex].courses[courseIndex].info
         }
         return this.classTableData.weekCourse[weekIndex].courses[courseIndex].subject
       }
       return '-'
     },
-
     /**
        * 去除数组里面所有字符串的空白字符
        * 并且要把转化成的字符串转换为整数
@@ -234,6 +227,33 @@ export default {
         res.push(i)
       }
       return res
+    },
+
+    /**
+       * 后台传递过来的数据课程顺序是乱的，需要做一次排序
+       * 思路是把新增的课程的课程数和课程名称覆盖成section的课程下标
+       * 比如新增的课程的的section为1，名字为VR应用项目策划，那么就把下标为0的课程覆盖
+       * */
+    sortarr (obj) {
+      if (obj.courses.length !== 0) {
+        for (let i in obj.courses) {
+          if (obj.courses[i].section !== undefined) {
+            if (i !== obj.courses[i].section - 1) {
+              // console.log(obj.courses[i].section)
+              if (obj.courses[obj.courses[i].section - 1] === '') {
+                let newdata = {}
+                newdata.section = obj.courses[i].section
+                newdata.subject = obj.courses[i].subject
+                // console.log(newdata)
+                // 把原来的下标覆盖上去
+                obj.courses[obj.courses[i].section - 1] = newdata
+                // 在修改值后把原来的值赋值为空
+                obj.courses[i] = ''
+              }
+            }
+          }
+        }
+      }
     },
 
     /**
@@ -291,8 +311,10 @@ export default {
       this.getdate(selectDate)
     },
 
-    toClassFunction (weekIndex, courseIndex) {
-      console.log(this.fieldCharacter(weekIndex, courseIndex))
+    toClassFunction (courseInfo) {
+      window.localStorage.setItem('courseInfo', JSON.stringify(courseInfo))
+      this.$store.state.courseInfo = courseInfo
+      this.$router.push('/classFunction/index')
     }
   }
 }

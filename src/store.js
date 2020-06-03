@@ -14,7 +14,8 @@ export default new Vuex.Store({
     // baseURL: 'http://192.168.8.246:8002/',//本地服务器http://192.168.8.235:8888
     // mediaURL: 'http://192.168.8.246:8002/media/',
     // videoURL: 'http://192.168.8.246:8002/video/',
-    userInfo: JSON.parse(window.localStorage.getItem('userInfo')) || {}
+    userInfo: JSON.parse(window.localStorage.getItem('userInfo')) || {},
+    courseInfo: JSON.parse(window.localStorage.getItem('courseInfo')) || {}
   },
   mutations: {
 
