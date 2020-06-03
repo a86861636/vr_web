@@ -6,16 +6,16 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/login',
+      path: '/',
       name: '登陆',
       component: () => import('@/views/login/login')
     }, {
-      path: '/',
-      name: '首页',
+      path: '/course',
+      name: '课程表',
       component: Layout,
       children: [{
         path: '/course',
-        name: '课程表',
+        name: '',
         component: () => import('@/views/course/course')
       }, {
         name: '课内功能',
