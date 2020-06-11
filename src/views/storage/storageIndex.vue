@@ -8,7 +8,7 @@
       router
       v-if="isIndex">
       <el-menu-item disabled>
-        <span slot="title" style="color: #9BAAB8">{{courseInfo.subject}}</span>
+        <span slot="title" style="color: #9BAAB8">文件存储</span>
       </el-menu-item>
       <el-menu-item v-for="(item,index) of list" :key="index" :index="'/classFunction'+item.path">
         <span slot="title">{{item.name}}</span>
@@ -31,33 +31,21 @@ export default {
     return {
       list: [
         {
-          name: '随堂测验',
+          name: '个人空间',
           path: '/exam',
           img: require('@/assets/classFunciton/ceyan.png')
         }, {
-          name: '课后作业',
-          path: '/homework',
-          img: require('@/assets/classFunciton/zuoye.png')
+          name: '公共素材',
+          path: '/exam',
+          img: require('@/assets/classFunciton/ceyan.png')
         }, {
-          name: '课堂答疑',
-          path: '/question',
-          img: require('@/assets/classFunciton/ketangdayi.png')
+          name: '班级素材',
+          path: '/exam',
+          img: require('@/assets/classFunciton/ceyan.png')
         }, {
-          name: '点名记录',
-          path: '/rollRecord',
-          img: require('@/assets/classFunciton/record.png')
-        }, {
-          name: '直播回放',
-          path: '/playBack',
-          img: require('@/assets/classFunciton/lubo.png')
-        }, {
-          name: '投票',
-          path: '/vote',
-          img: require('@/assets/classFunciton/lubo.png')
-        }, {
-          name: '课堂问答',
-          path: '/examList',
-          img: require('@/assets/classFunciton/cloud.png')
+          name: '个人素材',
+          path: '/exam',
+          img: require('@/assets/classFunciton/ceyan.png')
         }
       ],
       path: this.$router.path
@@ -68,9 +56,6 @@ export default {
   computed: {
     isIndex () {
       return this.$route.path !== '/classFunction/index'
-    },
-    courseInfo () {
-      return this.$store.state.courseInfo
     }
   },
   methods: {

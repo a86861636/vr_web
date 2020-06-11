@@ -1,8 +1,9 @@
 <template>
   <div class="record">
-    <div @click="back">返回</div>
-    <div class="line"></div>
-    <c-table v-if="mode==='record'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='recordData'></c-table>
+    <div class="line">
+      <div @click="back">返回</div>
+    </div>
+    <c-table v-if="mode==='record'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='paperData'></c-table>
     <c-table v-if="mode==='detail'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='detailData'></c-table>
 
     <el-dialog title="打卡状态" :visible.sync="dialogFormVisible" width="500px">
@@ -26,17 +27,17 @@ export default {
       mode: 'record',
       detail_id: '',
       dialogFormVisible: false,
-      recordData: {
-        title: ['签到开始', '正常', '病假', '缺勤', '迟到', '操作'], // 标题
+      paperData: {
+        title: ['试卷名称', '说明', '发布时间', '操作'], // 标题
         list: [], // 对应的内容
         date: [], // 对应的数据
         btn: ['查看'] // 最后的按钮 没有可以空
       },
       detailData: {
-        title: ['学号', '学生名字', '打卡时间', '打卡状态', '操作'],
+        title: ['学号', '学生名字', '完成情况', '操作'],
         list: [],
         date: [],
-        btn: ['修改']
+        btn: ['批改']
       },
       stateOption: [
         {
@@ -75,44 +76,46 @@ export default {
     getList () {
       console.log(this.$store.state.userInfo.tloginid)
       let data = {
-        url: 'signin/tsigninrecords/',
-        schedule_id: this.$store.state.courseInfo.dbid,
-        teacher_id: this.$store.state.userInfo.tloginid
+        url: 'exam/a/',
+        scheduleid: this.$store.state.courseInfo.dbid,
+        teacherid: this.$store.state.userInfo.tloginid
       }
       this.$store.dispatch('get', data).then((res) => {
-        this.recordData.date = res.data
+        this.paperData.date = res.data
         for (let item of res.data) {
           let arr = []
           for (let key in item) {
-            if (key !== 't_signin_id') {
+            if (key !== 'exampaper_id' && key !== 'releaseexampaper_id') {
               arr.push(item[key])
             }
           }
-          this.recordData.list.push(arr)
+          this.paperData.list.push(arr)
         }
-        // this.recordData.list = res.data
+        // this.paperData.list = res.data
       })
     },
     /**
        * 获取点名详情
        */
-    getDetail (id) {
+    getDetail (paperId, stuId) {
       let data = {
-        url: 'signin/getstudentstate/',
-        t_sign_in_id: id
+        url: 'exam/getanswerdetail/',
+        student_pid: stuId || '',
+        user_type: 't',
+        released_paper_id: 17 || paperId
       }
       this.mode = 'detail'
       this.$store.dispatch('get', data).then((res) => {
         this.detailData.list = []
-        this.detailData.date = res.data
-        for (let item of res.data) {
+        this.detailData.date = res.student_list
+        for (let item of res.student_list) {
           let arr = []
           for (let key in item) {
-            if (key !== 's_signin_id') {
+            if (key !== 'student_pid') {
               arr.push(item[key])
             }
           }
-          let sortArr = [arr[4], arr[3], arr[5], this.trans(arr[2])]
+          let sortArr = [arr[1], arr[0], this.trans(arr[2])]
           this.detailData.list.push(sortArr)
         }
       })
@@ -138,12 +141,10 @@ export default {
        * @param {Array} value value[0]为按钮文本 value[1]当行数据obj
        */
     trans (param) {
-      for (let item of this.stateOption) {
-        if (item.code === param) {
-          return item.text
-        } else if (item.text === param) {
-          return item.code
-        }
+      if (param) {
+        return '已提交'
+      } else {
+        return '未提交'
       }
     },
     /**
@@ -152,14 +153,13 @@ export default {
        */
     handleBtn (value) {
       let type = value[0]
-      let date = JSON.parse(value[1])
+      let data = JSON.parse(value[1])
       if (type === '查看') {
-        this.detail_id = date.t_signin_id
-        this.getDetail(date.t_signin_id)
-      } else if (type === '修改') {
-        this.form.s_sign_in_id = date.s_sign_in_id
-        this.form.state = this.trans(date.state)
-        this.dialogFormVisible = true
+        this.detail_id = data.exampaper_id
+        this.getDetail(data.exampaper_id)
+      } else if (type === '批改') {
+        console.log(data)
+        this.$router.push({path: '/classFunction/exam/check', query: { stuId: data.student_pid, paperId: this.detail_id }})
       }
     },
     back () {
@@ -176,9 +176,9 @@ export default {
 }
 .line{
   width: 500px;
-  height: 2px;
-  margin: 60px auto 0px auto;
-  background: #DFDFE2;
+  height: 60px;
+  margin: 0px auto 0px auto;
+  border-bottom: #DFDFE2 2px solid;
 }
 .table{
   margin: 20px auto;

@@ -18,6 +18,10 @@
           </span>
         </td>
       </tr>
+      <tr v-if="this.isadd===true">
+        <td style="font-size: 22px;color: #333333;" @click="adddata"> [+] </td>
+        <td v-for="(item,index) in tableData.title.length-1" :key="index"></td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -26,7 +30,17 @@
 <script>
 export default {
   name: 'table',
-  props: ['tableData', 'width'],
+  props: {
+    tableData: {
+      default: () => {}
+    },
+    width: {
+      default: () => {}
+    },
+    isadd: {
+      default: false
+    }
+  },
   data () {
     return {
     }
@@ -34,7 +48,13 @@ export default {
   methods: {
     handle (name, id) {
       this.$emit('tableBtn', name, id)
+    },
+    adddata () {
+      this.$emit('postdata')
     }
+  },
+  mounted () {
+    console.log(this.tableData.title.length)
   }
 }
 </script>

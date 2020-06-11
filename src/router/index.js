@@ -28,10 +28,38 @@ export default new Router({
             component: () => import('@/views/classFunction/rollRecord/rollRecord')
           }, {
             name: '试卷',
-            path: '/classFunction/examList',
-            component: () => import('@/views/classFunction/exam/examList')
+            path: '/classFunction/exam',
+            component: () => import('@/views/classFunction/exam/exam')
+          }, {
+            name: '投票',
+            path: '/classFunction/vote',
+            component: () => import('@/views/classFunction/vote/vote')
+          }, {
+            name: '作业',
+            path: '/classFunction/homework',
+            component: () => import('@/views/classFunction/homework/homework')
+          }, {
+            name: '回放',
+            path: '/classFunction/playBack',
+            component: () => import('@/views/classFunction/playBack/playBack')
+          }, {
+            name: '批改',
+            path: '/classFunction/exam/check',
+            component: () => import('@/views/classFunction/exam/check')
+          }, {
+            name: '投票',
+            path: '/classFunction/vote',
+            component: () => import('@/views/classFunction/vote/vote')
+          }, {
+            name: '学生问答',
+            path: '/classFunction/question',
+            component: () => import('@/views/classFunction/question/question')
           }
         ]
+      }, {
+        path: '/storage',
+        name: '课程表',
+        component: () => import('@/views/storage/storageIndex')
       }]
     }
   ]
