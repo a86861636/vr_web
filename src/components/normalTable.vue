@@ -8,22 +8,23 @@
       </thead>
       <div style="height: 2px"></div>
       <tbody>
-      <tr v-for="(list, listIndex) in tableData.list" :key="listIndex">
-        <td v-for="(item, itemIndex) in list" :key="itemIndex">
-          {{item}}
-        </td>
-        <td v-if="tableData.btn" class="btn-box">
-          <span v-for="(btn,btnIndex) in tableData.btn" :key="btnIndex" class="btn" @click="handle(btn,JSON.stringify(tableData.date[listIndex]))">
-            [{{btn}}]
-          </span>
-        </td>
-      </tr>
-      <tr v-if="this.isadd===true">
-        <td style="font-size: 22px;color: #333333;" @click="adddata"> [+] </td>
-        <td v-for="(item,index) in tableData.title.length-1" :key="index"></td>
-      </tr>
+        <tr v-for="(list, listIndex) in tableData.list" :key="listIndex">
+          <td v-for="(item, itemIndex) in list" :key="itemIndex">
+            {{item}}
+          </td>
+          <td v-if="tableData.btn" class="btn-box">
+            <span v-for="(btn,btnIndex) in tableData.btn" :key="btnIndex" class="btn" @click="handle(btn,JSON.stringify(tableData.data[listIndex]))">
+              [{{btn}}]
+            </span>
+          </td>
+        </tr>
+        <tr v-if="this.isadd===true">
+          <td style="font-size: 22px;color: #333333;" @click="adddata"> [+] </td>
+          <td v-for="(item,index) in tableData.title.length-1" :key="index"></td>
+        </tr>
       </tbody>
     </table>
+    <img v-if="tableData.list.length==0" class="nodata" src="@/assets/classFunciton/none.png" />
   </div>
 </template>
 
@@ -102,12 +103,22 @@ table {
   th,
   td {
     width: 60px;
-    padding: 12px 2px;
+    padding: 8px 2px;
     font-size: 12px;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 .btn{
   cursor: pointer;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.nodata{
+  width: 300px;
+  display: block;
+  margin: auto;
 }
 </style>

@@ -1,14 +1,24 @@
 <template>
   <div class="main">
-    <c-table :width="500" :tableData='recordData' @postdata="adddata" @tableBtn='handleBtn(arguments)'
-             :isadd="true"></c-table>
+    <div class="line">
+      <el-button type="danger" class="add" size="small" @click="adddata">新建问答</el-button>
+    </div>
+    <c-table class="table" :width="500" :tableData='recordData' @tableBtn='handleBtn(arguments)'></c-table>
 
     <el-dialog
+      title="发布问答"
       :visible.sync="dialogadddataVisible"
-      width="950px">
-      <div class="vote">
-        <div class="voteheader">发布问答</div>
-        <div class="questionslist">
+      width="500px">
+        <el-form label-width="80px" :rules="rules" ref="newForm"  :model="newForm">
+          <el-form-item prop="homeworknote" label="作业说明">
+            <el-input v-model="teachernote"></el-input>
+          </el-form-item>
+          <el-form-item label="附件">
+            <input type="file" @change="changeFile($event)" />
+          </el-form-item>
+          <el-button type="primary" @click="postqaa" style="display: block; margin: auto">立即创建</el-button>
+        </el-form>
+        <!-- <div class="questionslist">
           <el-input
             type="textarea"
             :rows="3"
@@ -17,7 +27,6 @@
             v-model="teachernote">
           </el-input>
           <div class="addfile">
-            <!--            <i class="el-icon-picture" style="color: #67a1ff;"></i>-->
             <div class="uploadimg" @click="openImg">
               <span v-if="imgUrl==''" style="font-size: 13px;">上传附件</span>
               <img style="height:100%;width:100%;" v-if="imgUrl!=''" :src="imgUrl"/>
@@ -27,8 +36,7 @@
       </div>
       <div class="postquestion">
         <input v-show="false" type="file" accept="image/*" @change="tirggerFile($event)" ref="input"/>
-        <el-button type="danger" @click="postqaa">发起投票</el-button>
-      </div>
+        <el-button type="danger" @click="postqaa">发起投票</el-button> -->
     </el-dialog>
 
     <el-dialog
@@ -84,9 +92,9 @@ export default {
   data () {
     return {
       recordData: {
-        title: ['发布人', '创建时间', '是否有附件', '操作'], // 标题
+        title: ['问题', '创建时间', '是否有附件', '操作'], // 标题
         list: [], // 对应的内容
-        date: [], // 对应的数据
+        data: [], // 对应的数据
         btn: ['查看'] // 最后的按钮 没有可以空
       },
       nums: 0,
@@ -109,10 +117,10 @@ export default {
         scheduleid: this.$store.state.courseInfo.dbid
       }
       this.$store.dispatch('get', data).then(res => {
-        this.recordData.date = res.data
+        this.recordData.data = res.data
         for (let item of res.data) {
           let arr = []
-          arr[0] = item.teaname
+          arr[0] = item.QAname
           arr[1] = item.QASdatetime
           if (item.QAmultimedia !== '') {
             arr[2] = '有'
@@ -170,6 +178,9 @@ export default {
     openImg () {
       this.$refs.input.click()
     },
+    changeFile (e) {
+      this.fileList = e.target.files[0]
+    },
     postqaa () {
       let data = {
         url: 'questioning/tpubqanote/',
@@ -190,7 +201,7 @@ export default {
         this.recordData = {
           title: ['发布人', '创建时间', '学生回答情况', '操作'], // 标题
           list: [], // 对应的内容
-          date: [], // 对应的数据
+          data: [], // 对应的数据
           btn: ['查看'] // 最后的按钮 没有可以空
         }
         this.getList()
@@ -227,6 +238,11 @@ export default {
       return (/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(str))
     }
   },
+  computed: {
+    mediaUrl () {
+      return this.$store.state.mediaUrl
+    }
+  },
   mounted () {
     this.getList()
   },
@@ -237,122 +253,133 @@ export default {
 </script>
 
 <style scoped>
-  .main {
-    padding: 20px;
-  }
+.table{
+  margin: 20px auto;
+}
 
-  .voteheader {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
+.voteheader {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 
-  .questions {
-    border-radius: 30px;
-    padding-top: 20px;
-    width: 85%;
-  }
+.questions {
+  border-radius: 30px;
+  padding-top: 20px;
+  width: 85%;
+}
 
-  .addfile {
-    line-height: 70px;
-    font-size: 30px;
-    width: 8%;
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-  }
+.addfile {
+  line-height: 70px;
+  font-size: 30px;
+  width: 8%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
 
-  .postquestion {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
+.postquestion {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
-  .questionslist {
-    display: flex;
-    flex-direction: row;
-  }
+.questionslist {
+  display: flex;
+  flex-direction: row;
+}
 
-  .uploadimg {
-    width: 73px;
-    height: 73px;
-    border: 1px solid;
-    text-align: center;
-    margin-left: 10px;
-  }
+.uploadimg {
+  width: 73px;
+  height: 73px;
+  border: 1px solid;
+  text-align: center;
+  margin-left: 10px;
+}
 
-  .answerheader {
-    padding-left: 7px;
-  }
+.answerheader {
+  padding-left: 7px;
+}
 
-  .answerheader span {
-    padding-left: 10px;
-  }
+.answerheader span {
+  padding-left: 10px;
+}
 
-  .answercontent {
-    padding-left: 17px;
-    padding-top: 20px;
-    font-weight: bold;
-  }
+.answercontent {
+  padding-left: 17px;
+  padding-top: 20px;
+  font-weight: bold;
+}
 
-  .answerdetail {
-    height: 100px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-  }
+.answerdetail {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
 
-  .answerdetail span {
-    padding-left: 15px;
-  }
+.answerdetail span {
+  padding-left: 15px;
+}
 
-  .answerdetail img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
-  }
+.answerdetail img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
 
-  .answerrow {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+.answerrow {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-  .answercolume {
-    display: flex;
-    flex-direction: row;
-  }
+.answercolume {
+  display: flex;
+  flex-direction: row;
+}
 
-  .stuanswer {
-    margin-left: 15px;
-    margin-top: 20px;
-    font-weight: bold;
-  }
+.stuanswer {
+  margin-left: 15px;
+  margin-top: 20px;
+  font-weight: bold;
+}
 
-  .answerscroll {
-    height: 400px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+.answerscroll {
+  height: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 
-  .answerscroll::-webkit-scrollbar {
-    display: none;
-  }
+.answerscroll::-webkit-scrollbar {
+  display: none;
+}
 
-  .questionimg {
-    text-align: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
+.questionimg {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 
-  .questionimg img {
-    width: 150px;
-  }
+.questionimg img {
+  width: 150px;
+}
 
-  .nonepng{
-    text-align: center;
-  }
+.nonepng{
+  text-align: center;
+}
+
+.line{
+  width: 500px;
+  height: 60px;
+  margin: 0px auto 0px auto;
+  border-bottom: #DFDFE2 2px solid;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 </style>

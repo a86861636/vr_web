@@ -25,8 +25,8 @@
             class="questions"
             v-model="votedata.name">
           </el-input>
-          <div style="line-height: 70px;font-size: 30px;width: 8%;display: flex;flex-direction: column;padding-top: 20px;">
-<!--            <i class="el-icon-picture" style="color: #67a1ff;"></i>-->
+          <div class="imgBox">
+            <img class="img" :src=" imgFile || require('@/assets/classFunciton/img.png')" />
             <input type="file" @change="selectedFile($event)" class="upload">
           </div>
         </div>
@@ -40,13 +40,13 @@
             <template slot="prepend">{{showlabel(keys)}}</template>
           </el-input>
           <el-button type="danger" @click="deletedata(keys)" icon="el-icon-delete" circle v-if="keys>1"
-                     class="deletebutton"></el-button>
+                    class="deletebutton"></el-button>
         </div>
-        <el-button class="addquestion" type="primary" @click="addmessage">添加投票选项</el-button>
-        <el-button class="postquestion" type="danger" @click="postmessage">发起投票</el-button>
+        <div class="footer">
+          <el-button class="addquestion" type="primary" @click="addmessage">添加投票选项</el-button>
+          <el-button class="postquestion" type="danger" @click="postmessage">发起投票</el-button>
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-  </span>
     </el-dialog>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
       recordData: {
         title: ['已发布试卷名称', '创建时间', '学生提交情况', '操作'], // 标题
         list: [], // 对应的内容
-        date: [], // 对应的数据
+        data: [], // 对应的数据
         btn: ['图表', '删除'] // 最后的按钮 没有可以空
       },
       dialogVisible: false,
@@ -75,7 +75,7 @@ export default {
           {answer: ''}
         ]
       },
-      fileList: ''
+      imgFile: ''
     }
   },
   methods: {
@@ -83,14 +83,14 @@ export default {
     getList () {
       console.log(this.$store.state.userInfo.tloginid)
       let data = {
-        url: 'vote/r/',
+        url: 'vote/t/',
         teacherid: this.$store.state.userInfo.tloginid,
         scheduleid: this.$store.state.courseInfo.dbid
       }
       console.log(data)
       this.$store.dispatch('get', data).then((res) => {
         console.log(res)
-        this.recordData.date = res.data
+        this.recordData.data = res.data
         for (let item of res.data) {
           console.log(item)
           let arr = []
@@ -105,10 +105,10 @@ export default {
     handleBtn (value) {
       console.log(value)
       let type = value[0]
-      let date = JSON.parse(value[1])
+      let data = JSON.parse(value[1])
       console.log(type)
       if (type === '图表') {
-        this.tablescheduleid = date.releaseid
+        this.tablescheduleid = data.releaseid
         this.dialogVisible = true
         this.$nextTick(function () {
           this.initChart()
@@ -256,7 +256,7 @@ export default {
             url: 'vote/tpubvote/',
             param: new FormData()
           }
-          data.param.append('filePath', this.fileList)
+          data.param.append('filePath', this.imgFile)
           data.param.append('teacherid', this.$store.state.userInfo.tloginid)
           data.param.append('votename', this.votedata.name)
           data.param.append('votenote', '无')
@@ -313,12 +313,10 @@ export default {
         console.log(this.votedata.answer)
       }
     },
-
     // 把数组的id转换为字母
     showlabel (data) {
       return String.fromCharCode(data + 65)
     },
-
     fileByBase64 (file, callback) {
       var reader = new FileReader()
       // 传入一个参数对象即可得到基于该参数对象的文本内容
@@ -347,8 +345,8 @@ export default {
         this.base64ByBlob(base64, blob => {
           // console.log(blob, 'blob')
           var url = window.URL.createObjectURL(blob)
-          this.fileList = url
-          console.log(this.fileList)
+          this.imgFile = url
+          console.log(this.imgFile)
         })
       })
     }
@@ -363,52 +361,76 @@ export default {
 </script>
 
 <style scoped>
-  .main {
-    padding: 20px;
-  }
+.main {
+  padding: 20px;
+}
 
-  .addbutton {
-    margin-right: 35px;
-    margin-top: 20px;
-  }
+.addbutton {
+  margin-right: 35px;
+  margin-top: 20px;
+}
 
-  .deletebutton {
-    margin-left: 20px;
-    margin-top: 17px;
-    height: 45px;
-    width: 45px;
-  }
+.deletebutton {
+  margin-left: 20px;
+  margin-top: 17px;
+  height: 45px;
+  width: 45px;
+}
 
-  .upload {
-    /*display: none;*/
-    /*opacity: 0;*/
-  }
+.upload {
+  /*display: none;*/
+  /*opacity: 0;*/
+}
 
-  .voteheader {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
+.voteheader {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 
-  .questions {
-    border-radius: 30px;
-    padding-top: 20px;
-    width: 90%;
-  }
+.questions {
+  border-radius: 30px;
+  padding-top: 20px;
+  width: 90%;
+}
 
-  .addquestion {
-    margin-top: 10px;
-    float: left;
-  }
+.addquestion {
+  margin-top: 10px;
+  float: left;
+}
 
-  .postquestion {
-    margin-top: 10px;
-    float: right;
-  }
+.postquestion {
+  margin-top: 10px;
+  float: right;
+}
 
-  .questionslist {
-    display: flex;
-    flex-direction: row;
-  }
+.questionslist {
+  display: flex;
+  flex-direction: row;
+}
+
+.imgBox{
+  width: 50px;
+  height: 50px;
+  position: relative;
+  margin: 22px 0 0 15px;
+}
+.img{
+  width: 100%;
+  height: 100%;
+}
+.upload{
+  display: block;
+  position: absolute;
+  opacity: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.footer{
+  padding: 10px 0 0 0;
+  height: 50px;
+}
 </style>

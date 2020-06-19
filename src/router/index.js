@@ -43,10 +43,6 @@ export default new Router({
             path: '/classFunction/playBack',
             component: () => import('@/views/classFunction/playBack/playBack')
           }, {
-            name: '批改',
-            path: '/classFunction/exam/check',
-            component: () => import('@/views/classFunction/exam/check')
-          }, {
             name: '投票',
             path: '/classFunction/vote',
             component: () => import('@/views/classFunction/vote/vote')
@@ -54,13 +50,47 @@ export default new Router({
             name: '学生问答',
             path: '/classFunction/question',
             component: () => import('@/views/classFunction/question/question')
+          }, {
+            name: '加分申请',
+            path: '/classFunction/addPoint',
+            component: () => import('@/views/classFunction/addPoint/addPoint')
           }
         ]
-      }, {
-        path: '/storage',
-        name: '课程表',
-        component: () => import('@/views/storage/storageIndex')
       }]
+    }, {
+      path: '/storage',
+      redirect: '/storage/personspace',
+      component: Layout,
+      children: [
+        {
+          name: '课内功能',
+          path: '/storage/index',
+          redirect: '/storage/personspace',
+          component: () => import('@/views/storage/storageIndex'),
+          children: [
+            {
+              name: '个人空间',
+              path: '/storage/personspace',
+              component: () => import('@/views/storage/personspace/personspace')
+            },
+            {
+              name: '公共素材',
+              path: '/storage/publicmaterial',
+              component: () => import('@/views/storage/publicmaterial/publicmaterial')
+            },
+            {
+              name: '班级素材',
+              path: '/storage/classmaterial',
+              component: () => import('@/views/storage/classmaterial/classmaterial')
+            },
+            {
+              name: '个人素材',
+              path: '/storage/personmaterial',
+              component: () => import('@/views/storage/personmaterial/personmaterial')
+            }
+          ]
+        }
+      ]
     }
   ]
 })

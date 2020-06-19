@@ -4,9 +4,9 @@
       <img src="@/assets/header/logo.png" />
     </div>
     <div class="right">
-      <img class="icon" src="@/assets/header/date.png" />
+      <img class="icon" src="@/assets/header/date.png" @click="toPath('/course')" />
       <img class="icon" src="@/assets/header/notice.png" />
-      <img class="icon" src="@/assets/header/file.png" />
+      <img class="icon" src="@/assets/header/file.png" @click="toPath('/storage')" />
     </div>
   </div>
 </template>
@@ -17,6 +17,11 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    toPath (path) {
+      this.$router.push(path)
     }
   }
 }

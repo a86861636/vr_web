@@ -78,6 +78,7 @@ export default {
     console.log(this.$route.query)
     this.getPaper()
   },
+  props: ['stuId', 'paperId'],
   methods: {
     handlePaperData (list) {
       for (let item of list) {
@@ -119,14 +120,15 @@ export default {
       console.log(data)
       this.$store.dispatch('post', data).then((res) => {
         console.log(res)
+        this.$emit('close')
       })
     },
     getPaper (stuId, paperId) {
       let data = {
         url: 'exam/getanswerdetail/',
-        student_pid: 805 || this.$route.query.stuId,
+        student_pid: this.stuId,
         user_type: 't',
-        released_paper_id: 17 || this.$route.query.paperId
+        released_paper_id: this.paperId
       }
       this.$store.dispatch('get', data).then((res) => {
         res.data_list = this.handlePaperData(res.data_list) || []
@@ -141,13 +143,11 @@ export default {
 .check{
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-.subject{
-  width: 420px;
   padding: 20px;
   border:1px solid rgba(218,218,218,1);
-  margin-top: 30px;
+}
+.subject:first-child{
+  margin-top: 0px;
 }
 .option{
   margin-top: 10px;
@@ -201,15 +201,15 @@ export default {
   white-space: nowrap;
 }
 .submit-button{
-  width: 80px;
-  height: 45px;
-  line-height: 45px;
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
   background:rgba(255,180,184,1);
   box-shadow:0px 4px 8px 0px rgba(162,162,162,0.5);
   border-radius:16px;
   text-align: center;
   color: rgba(255,255,255,1);
-  font-size: 22px;
-  margin: 45px auto 30px auto;
+  font-size: 18px;
+  margin: 20px auto 0px auto;
 }
 </style>

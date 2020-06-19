@@ -1,7 +1,7 @@
 <template>
   <div class="classFunction">
     <el-menu
-      default-active="2"
+      :default-active="indexPath"
       class="menu"
       background-color="#F7F9F9"
       text-color="#000000"
@@ -58,16 +58,21 @@ export default {
           name: '课堂问答',
           path: '/examList',
           img: require('@/assets/classFunciton/cloud.png')
+        }, {
+          name: '申请加分',
+          path: '/addPoint',
+          img: require('@/assets/classFunciton/cloud.png')
         }
       ],
       path: this.$router.path
     }
   },
-  mounted () {
-  },
   computed: {
     isIndex () {
       return this.$route.path !== '/classFunction/index'
+    },
+    indexPath () {
+      return this.$route.path
     },
     courseInfo () {
       return this.$store.state.courseInfo

@@ -1,7 +1,7 @@
 <template>
   <div class="classFunction">
     <el-menu
-      default-active="2"
+      :default-active="indexPath"
       class="menu"
       background-color="#F7F9F9"
       text-color="#000000"
@@ -10,7 +10,7 @@
       <el-menu-item disabled>
         <span slot="title" style="color: #9BAAB8">文件存储</span>
       </el-menu-item>
-      <el-menu-item v-for="(item,index) of list" :key="index" :index="'/classFunction'+item.path">
+      <el-menu-item v-for="(item,index) of list" :key="index" :index="'/storage'+item.path">
         <span slot="title">{{item.name}}</span>
       </el-menu-item>
     </el-menu>
@@ -32,19 +32,19 @@ export default {
       list: [
         {
           name: '个人空间',
-          path: '/exam',
+          path: '/personspace',
           img: require('@/assets/classFunciton/ceyan.png')
         }, {
           name: '公共素材',
-          path: '/exam',
+          path: '/publicmaterial',
           img: require('@/assets/classFunciton/ceyan.png')
         }, {
           name: '班级素材',
-          path: '/exam',
+          path: '/classmaterial',
           img: require('@/assets/classFunciton/ceyan.png')
         }, {
           name: '个人素材',
-          path: '/exam',
+          path: '/personmaterial',
           img: require('@/assets/classFunciton/ceyan.png')
         }
       ],
@@ -56,6 +56,9 @@ export default {
   computed: {
     isIndex () {
       return this.$route.path !== '/classFunction/index'
+    },
+    indexPath () {
+      return this.$route.path
     }
   },
   methods: {

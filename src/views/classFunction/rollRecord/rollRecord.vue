@@ -1,8 +1,9 @@
 <template>
   <div class="record">
-    <div @click="back">返回</div>
-    <div class="line"></div>
-    <c-table v-if="mode==='record'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='recordData'></c-table>
+    <div class="line">
+      <img class="back" src="@/assets/classFunciton/back.png" @click="back" v-if="mode != 'home'" />
+    </div>
+    <c-table v-if="mode==='home'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='recordData'></c-table>
     <c-table v-if="mode==='detail'" class="table" @tableBtn='handleBtn(arguments)' :width="500" :tableData='detailData'></c-table>
 
     <el-dialog title="打卡状态" :visible.sync="dialogFormVisible" width="500px">
@@ -23,19 +24,19 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      mode: 'record',
+      mode: 'home',
       detail_id: '',
       dialogFormVisible: false,
       recordData: {
         title: ['签到开始', '正常', '病假', '缺勤', '迟到', '操作'], // 标题
         list: [], // 对应的内容
-        date: [], // 对应的数据
+        data: [], // 对应的数据
         btn: ['查看'] // 最后的按钮 没有可以空
       },
       detailData: {
         title: ['学号', '学生名字', '打卡时间', '打卡状态', '操作'],
         list: [],
-        date: [],
+        data: [],
         btn: ['修改']
       },
       stateOption: [
@@ -80,7 +81,7 @@ export default {
         teacher_id: this.$store.state.userInfo.tloginid
       }
       this.$store.dispatch('get', data).then((res) => {
-        this.recordData.date = res.data
+        this.recordData.data = res.data
         for (let item of res.data) {
           let arr = []
           for (let key in item) {
@@ -104,7 +105,7 @@ export default {
       this.mode = 'detail'
       this.$store.dispatch('get', data).then((res) => {
         this.detailData.list = []
-        this.detailData.date = res.data
+        this.detailData.data = res.data
         for (let item of res.data) {
           let arr = []
           for (let key in item) {
@@ -152,18 +153,18 @@ export default {
        */
     handleBtn (value) {
       let type = value[0]
-      let date = JSON.parse(value[1])
+      let data = JSON.parse(value[1])
       if (type === '查看') {
-        this.detail_id = date.t_signin_id
-        this.getDetail(date.t_signin_id)
+        this.detail_id = data.t_signin_id
+        this.getDetail(data.t_signin_id)
       } else if (type === '修改') {
-        this.form.s_sign_in_id = date.s_sign_in_id
-        this.form.state = this.trans(date.state)
+        this.form.s_sign_in_id = data.s_sign_in_id
+        this.form.state = this.trans(data.state)
         this.dialogFormVisible = true
       }
     },
     back () {
-      this.mode = 'record'
+      this.mode = 'home'
     }
   }
 }
@@ -174,11 +175,23 @@ export default {
 .record{
   overflow: hidden;
 }
+.nodata{
+  text-align: center;
+}
 .line{
   width: 500px;
-  height: 2px;
-  margin: 60px auto 0px auto;
-  background: #DFDFE2;
+  height: 60px;
+  margin: 0px auto 0px auto;
+  border-bottom: #DFDFE2 2px solid;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.back{
+  width: 30px;
+  height: 30px;
+  display: block;
+  cursor: pointer;
 }
 .table{
   margin: 20px auto;
