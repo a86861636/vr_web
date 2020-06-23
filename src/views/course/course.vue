@@ -1,23 +1,25 @@
 <template>
   <div class="class-table">
-    学年学期：
-    <el-select v-model="currentTermDate" @change="handleSelectWeek" placeholder="请选择">
-      <el-option
-        v-for="item in termList"
-        :key="item.semesterdate_id"
-        :label="item.semesterdate_id"
-        :value="item.semesterdate_id">
-      </el-option>
-    </el-select>
-    &nbsp;&nbsp;&nbsp;周次：
-    <el-select v-model="currentWeek" @change="handleSelectWeek" placeholder="请选择">
-      <el-option
-        v-for="item in weekList"
-        :key="item"
-        :label="item"
-        :value="item">
-      </el-option>
-    </el-select>
+    <div>
+      学年学期：
+      <el-select v-model="currentTermDate" @change="handleSelectWeek" placeholder="请选择">
+        <el-option
+          v-for="item in termList"
+          :key="item.semesterdate_id"
+          :label="item.semesterdate_id"
+          :value="item.semesterdate_id">
+        </el-option>
+      </el-select>
+      &nbsp;&nbsp;&nbsp;周次：
+      <el-select v-model="currentWeek" @change="handleSelectWeek" placeholder="请选择">
+        <el-option
+          v-for="item in weekList"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+    </div>
     <div class="table-wrapper">
       <div class="tabel-container">
         <table>
@@ -116,6 +118,8 @@ export default {
           this.termList = res.semester_list.reverse()
           this.currentTermDate = this.termList[0].semesterdate_id
           this.currentTerm = this.termList[0]
+          this.$store.state.currentTerm = this.currentTerm
+          this.$store.state.currentWeek = this.currentWeek
         }
 
         for (let j of this.classTableData.weekCourse) {
@@ -308,6 +312,8 @@ export default {
         }
       }
       let selectDate = this.getFullDate(this.currentTerm.semester_startdate, this.currentWeek)
+      this.$store.state.currentTerm = this.currentTerm
+      this.$store.state.currentWeek = this.currentWeek
       this.getdate(selectDate)
     },
 
@@ -330,7 +336,9 @@ export default {
     }
 
     .tabel-container {
-
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       table {
         table-layout: fixed;
         width: 720px;

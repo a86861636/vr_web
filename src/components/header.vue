@@ -4,9 +4,16 @@
       <img src="@/assets/header/logo.png" />
     </div>
     <div class="right">
-      <img class="icon" src="@/assets/header/date.png" @click="toPath('/course')" />
-      <img class="icon" src="@/assets/header/notice.png" />
-      <img class="icon" src="@/assets/header/file.png" @click="toPath('/storage')" />
+      <img class="icon" :src="faceUrl">
+      <el-tooltip class="item" effect="dark" content="课表" placement="bottom">
+        <img class="icon" src="@/assets/header/date.png" @click="toPath('/course')" />
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="空间" placement="bottom">
+        <img class="icon" src="@/assets/header/file.png" @click="toPath('/storage')" />
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="登出" placement="bottom">
+        <img class="icon" src="@/assets/header/logout.png" @click="logout" />
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -19,7 +26,17 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+  computed: {
+    faceUrl () {
+      return this.$store.state.mediaURL + this.$store.state.userInfo.teacher_picteacher_pic
+    }
+  },
   methods: {
+    logout () {
+      this.$store.state.userInfo = {}
+      window.localStorage.removeItem('userInfo')
+      this.$router.push('/login')
+    },
     toPath (path) {
       this.$router.push(path)
     }

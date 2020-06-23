@@ -1,8 +1,10 @@
 <template>
   <div class="main">
+    <div class="line">
+      <el-button type="danger" class="add" size="small" @click="adddata">新建问答</el-button>
+    </div>
     <!--    <el-button type="danger" round class="addbutton" @click="adddata">添加</el-button>-->
-    <c-table @tableBtn='handleBtn(arguments)' @postdata="adddata" :width="500" :tableData='recordData'
-             :isadd="true"></c-table>
+    <c-table @tableBtn='handleBtn(arguments)' class="table" @postdata="adddata" :width="500" :tableData='recordData'></c-table>
 
     <el-dialog
       :visible.sync="dialogVisible"
@@ -14,7 +16,7 @@
 
     <el-dialog
       :visible.sync="dialogadddataVisible"
-      width="950px">
+      width="550px">
       <div class="vote">
         <div class="voteheader">创建投票应用</div>
         <div class="questionslist">
@@ -60,7 +62,7 @@ export default {
   data () {
     return {
       recordData: {
-        title: ['已发布试卷名称', '创建时间', '学生提交情况', '操作'], // 标题
+        title: ['投票名称', '创建时间', '学生提交情况', '操作'], // 标题
         list: [], // 对应的内容
         data: [], // 对应的数据
         btn: ['图表', '删除'] // 最后的按钮 没有可以空
@@ -95,7 +97,7 @@ export default {
           console.log(item)
           let arr = []
           arr[0] = item.name
-          arr[1] = '还没有时间接口'
+          arr[1] = '-'
           arr[2] = item.answernum
           this.recordData.list.push(arr)
         }
@@ -432,5 +434,19 @@ export default {
 .footer{
   padding: 10px 0 0 0;
   height: 50px;
+}
+
+.table{
+  margin: 20px auto;
+}
+.line{
+  width: 500px;
+  height: 60px;
+  margin: 0px auto 0px auto;
+  border-bottom: #DFDFE2 2px solid;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

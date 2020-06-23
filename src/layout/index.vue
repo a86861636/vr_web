@@ -32,12 +32,16 @@ export default {
   flex-direction: column;
   align-items: center;
   background: #FDF0E9;
+  background-attachment: fixed;
+  -moz-background-size: 100% 100%;
+  background-size: 100% 100%;
+  background-image: url('../assets/classFunciton/bg1.png');
 }
 .container{
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  margin-top: 60px;
   min-width: 800px;
 }
 .router-view{

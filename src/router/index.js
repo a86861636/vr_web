@@ -7,6 +7,9 @@ export default new Router({
   routes: [
     {
       path: '/',
+      redirect: '/login'
+    }, {
+      path: '/login',
       name: '登陆',
       component: () => import('@/views/login/login')
     }, {
@@ -47,7 +50,11 @@ export default new Router({
             path: '/classFunction/vote',
             component: () => import('@/views/classFunction/vote/vote')
           }, {
-            name: '学生问答',
+            name: '课堂提问',
+            path: '/classFunction/quiz',
+            component: () => import('@/views/classFunction/quiz/quiz')
+          }, {
+            name: '学生疑问',
             path: '/classFunction/question',
             component: () => import('@/views/classFunction/question/question')
           }, {

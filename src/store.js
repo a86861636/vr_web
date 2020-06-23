@@ -15,7 +15,9 @@ export default new Vuex.Store({
     // mediaURL: 'http://192.168.8.246:8002/media/',
     // videoURL: 'http://192.168.8.246:8002/video/',
     userInfo: JSON.parse(window.localStorage.getItem('userInfo')) || {},
-    courseInfo: JSON.parse(window.localStorage.getItem('courseInfo')) || {}
+    courseInfo: JSON.parse(window.localStorage.getItem('courseInfo')) || {},
+    currentTerm: '', // 课表选中学期
+    currentWeek: '' // 课表选中周数
   },
   mutations: {
 

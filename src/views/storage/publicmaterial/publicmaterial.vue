@@ -1,7 +1,6 @@
 <template>
   <div class="main">
     <div class="select">
-      <span style="font-size: 12px;">请选择:</span>
       <el-select v-model="schoolvalue" placeholder="请选择学校" size="mini" style="width: 120px;">
         <el-option
           v-for="item in schooloptions"
@@ -21,8 +20,6 @@
           @change="handleChange"
           clearable></el-cascader>
       </span>
-    </div>
-    <div class="selectcss">
       <el-select v-model="filevalue" placeholder="请选择" size="mini" style="width: 120px;" @change="selectfilecate">
         <el-option
           v-for="item in fileoptions"

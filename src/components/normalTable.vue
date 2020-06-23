@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  name: 'table',
+  name: 'normalTable',
   props: {
     tableData: {
       default: () => {}
@@ -62,12 +62,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.table {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-}
-
 table {
   box-sizing: border-box;
   table-layout: fixed;
