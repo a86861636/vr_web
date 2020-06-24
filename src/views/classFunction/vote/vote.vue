@@ -1,10 +1,22 @@
 <template>
   <div class="main">
     <div class="line">
-      <el-button type="danger" class="add" size="small" @click="adddata">新建问答</el-button>
+      <el-select v-model="mode" placeholder="请选择" size="small" style="width: 120px;">
+        <el-option
+          label="已发布"
+          :value="1"
+        >
+        </el-option>
+        <el-option
+          label="投票库"
+          :value="2"
+        >
+        </el-option>
+      </el-select>
+      <el-button type="danger" v-if="mode===2" class="add" size="small" @click="adddata">新建问答</el-button>
     </div>
     <!--    <el-button type="danger" round class="addbutton" @click="adddata">添加</el-button>-->
-    <c-table @tableBtn='handleBtn(arguments)' class="table" @postdata="adddata" :width="500" :tableData='recordData'></c-table>
+    <c-table @tableBtn='handleBtn(arguments)' class="table" @postdata="adddata" :width="500" :tableData='tableData'></c-table>
 
     <el-dialog
       :visible.sync="dialogVisible"
@@ -61,11 +73,18 @@ export default {
   name: 'vote',
   data () {
     return {
-      recordData: {
+      mode: 1,
+      libData: {
         title: ['投票名称', '创建时间', '学生提交情况', '操作'], // 标题
         list: [], // 对应的内容
         data: [], // 对应的数据
-        btn: ['图表', '删除'] // 最后的按钮 没有可以空
+        btn: ['发布', '删除', '编辑'] // 最后的按钮 没有可以空
+      },
+      releaseData: {
+        title: ['投票名称', '创建时间', '学生提交情况', '操作'], // 标题
+        list: [], // 对应的内容
+        data: [], // 对应的数据
+        btn: ['详情', '删除'] // 最后的按钮 没有可以空
       },
       dialogVisible: false,
       dialogadddataVisible: false,
@@ -80,35 +99,54 @@ export default {
       imgFile: ''
     }
   },
+  computed: {
+    tableData () {
+      if (this.mode === 1) {
+        return this.releaseData
+      } else {
+        return this.libData
+      }
+    }
+  },
   methods: {
-    // 获取投票列表
+    // 获取未发布投票列表
     getList () {
-      console.log(this.$store.state.userInfo.tloginid)
       let data = {
         url: 'vote/t/',
-        teacherid: this.$store.state.userInfo.tloginid,
-        scheduleid: this.$store.state.courseInfo.dbid
+        teacherid: this.$store.state.userInfo.tloginid
       }
-      console.log(data)
       this.$store.dispatch('get', data).then((res) => {
-        console.log(res)
-        this.recordData.data = res.data
+        this.libData.data = res.data
         for (let item of res.data) {
-          console.log(item)
           let arr = []
           arr[0] = item.name
           arr[1] = '-'
           arr[2] = item.answernum
-          this.recordData.list.push(arr)
+          this.libData.list.push(arr)
+        }
+      })
+    },
+    getReleaseList () {
+      let data = {
+        url: 'vote/r/',
+        teacherid: this.$store.state.userInfo.tloginid,
+        scheduleid: this.$store.state.courseInfo.dbid
+      }
+      this.$store.dispatch('get', data).then((res) => {
+        this.releaseData.data = res.data
+        for (let item of res.data) {
+          let arr = []
+          arr[0] = item.name
+          arr[1] = '-'
+          arr[2] = item.answernum
+          this.releaseData.list.push(arr)
         }
       })
     },
     // 显示图表
     handleBtn (value) {
-      console.log(value)
       let type = value[0]
       let data = JSON.parse(value[1])
-      console.log(type)
       if (type === '图表') {
         this.tablescheduleid = data.releaseid
         this.dialogVisible = true
@@ -128,7 +166,6 @@ export default {
         releasevoteid: this.tablescheduleid
       }
       this.$store.dispatch('get', tabledata).then((res) => {
-        console.log(res)
         let data = {
           color: ['#DFE6A4', '#73C0AE', '#58afed', '#A4D9F8', '#EEA77B', '#EB7B7D'],
           tooltip: {
@@ -168,11 +205,9 @@ export default {
         if (res.data === '目前没有学生投票！') {
           this.chart.setOption(data)
         } else {
-          console.log(res.data.Ring.series)
           let newlegend = []
           let newseries = []
           for (let i of res.data.Ring.series) {
-            console.log(i)
             let obj = {}
             obj.value = i.data
             obj.name = i.name
@@ -286,7 +321,6 @@ export default {
           data.param.append('vote_answer5', this.votedata.answer[4].answer)
           data.param.append('vote_answer6', this.votedata.answer[5].answer)
           this.$store.dispatch('uploadFile', data).then(res => {
-            console.log(res)
             // 把选项的值清空
             this.votedata = {
               name: '',
@@ -309,10 +343,8 @@ export default {
     },
     // 删除指定下标
     deletedata (id) {
-      console.log(id)
       if (id > 1) {
         this.votedata.answer.splice(id, 1)
-        console.log(this.votedata.answer)
       }
     },
     // 把数组的id转换为字母
@@ -325,7 +357,6 @@ export default {
       reader.readAsDataURL(file)
       reader.onload = function (e) {
         // target.result 该属性表示目标对象的DataURL
-        // console.log(e.target.result)
         callback(e.target.result)
       }
     },
@@ -336,7 +367,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
-      // console.log(new Blob([u8arr], { type: mime }))
       callback(new Blob([u8arr], {type: mime}))
     },
 
@@ -345,16 +375,15 @@ export default {
 
       this.fileByBase64(file, (base64) => {
         this.base64ByBlob(base64, blob => {
-          // console.log(blob, 'blob')
           var url = window.URL.createObjectURL(blob)
           this.imgFile = url
-          console.log(this.imgFile)
         })
       })
     }
   },
   mounted () {
     this.getList()
+    this.getReleaseList()
   },
   components: {
     'c-table': table

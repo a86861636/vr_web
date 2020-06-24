@@ -233,7 +233,7 @@ export default {
         trans: true,
         paper_id: this.form.paper_id,
         paper_title: this.form.paper_name,
-        note: this.form.paper_name,
+        note: this.form.note,
         multimedia: '',
         percent: this.form.proportion,
         full_mark: 0,

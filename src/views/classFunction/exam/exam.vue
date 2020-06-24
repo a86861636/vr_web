@@ -2,7 +2,7 @@
   <div class="record">
     <div class="line">
       <img class="back" src="@/assets/classFunciton/back.png" @click="back" v-if="iconShow" />
-      <el-select v-model="mode" placeholder="请选择" size="small" style="width: 120px;">
+      <el-select v-model="mode" v-if="mode!==3" placeholder="请选择" size="small" style="width: 120px;">
         <el-option
           label="已发布"
           :value="1"

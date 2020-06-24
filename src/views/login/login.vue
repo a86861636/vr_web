@@ -74,6 +74,7 @@ export default {
         console.log(res.tloginid)
         if (res.tloginid) {
           this.userInfo = res
+          this.$store.state.userInfo = res
           this.userInfo.assistantMode = false
           console.log(this.userInfo)
           if (this.form.type === '助教') {
