@@ -105,7 +105,7 @@ export default {
         schedule_id: this.$store.state.courseInfo.dbid,
         application_id: this.selectInfo.application_id,
         handle_state: 1,
-        student_id: this.selectInfo.student_id,
+        student_id: this.selectInfo.student_pid,
         star: this.form.star + ''
       }
       this.$store.dispatch('post', data).then((res) => {

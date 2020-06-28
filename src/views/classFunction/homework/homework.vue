@@ -455,7 +455,7 @@ export default {
         message: '下载中',
         type: 'success'
       })
-      downloadfile(this.$store.state.mediaURL + path)
+      downloadfile(this.$store.state.baseURL + path)
     },
     back () {
       this.mode = 1
