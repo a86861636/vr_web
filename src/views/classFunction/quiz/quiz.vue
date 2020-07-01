@@ -10,11 +10,11 @@
       :visible.sync="dialogadddataVisible"
       width="500px">
         <el-form label-width="80px">
-          <el-form-item prop="homeworknote" label="作业说明">
+          <el-form-item prop="homeworknote" label="问题题目">
             <el-input v-model="teachernote"></el-input>
           </el-form-item>
-          <el-form-item label="附件">
-            <input type="file" @change="changeFile($event)" />
+          <el-form-item label="图片附件">
+            <input type="file" accept="image/*"  @change="changeFile($event)" />
           </el-form-item>
           <el-button type="primary" @click="postqaa" style="display: block; margin: auto">立即创建</el-button>
         </el-form>
@@ -185,7 +185,7 @@ export default {
       data.param.append('teacherid', this.$store.state.userInfo.tloginid)
       data.param.append('scheduleid', this.$store.state.courseInfo.dbid)
       data.param.append('teachernote', this.teachernote)
-      data.param.append('filePath', this.fileList)
+      data.param.append('myfile', this.fileList)
       this.$store.dispatch('uploadFile', data).then(res => {
         this.$message({
           message: '问答信息提交成功',

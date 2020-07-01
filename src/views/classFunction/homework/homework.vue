@@ -77,7 +77,7 @@
 <script>
 import table from '@/components/normalTable'
 import check from '@/views/classFunction/homework/check'
-import downloadfile from 'downloadjs'
+import downloadfile from '@/utils/utils.js'
 export default {
   name: 'HelloWorld',
   data () {
@@ -115,7 +115,7 @@ export default {
       },
       detailId: '',
       detailData: {
-        title: ['学号', '学生名字', '完成情况', '操作'],
+        title: ['名字', '学号', '完成情况', '操作'],
         list: [],
         data: [],
         btn: ['批改']

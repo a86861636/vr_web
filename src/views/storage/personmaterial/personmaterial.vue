@@ -61,7 +61,7 @@ import ppt from '@/assets/history/ppt.png'
 import video from '@/assets/history/video.png'
 import excel from '@/assets/history/excel.png'
 import txt from '@/assets/history/txt.png'
-import downloadfile from 'downloadjs'
+import downloadfile from '@/utils/utils.js'
 
 export default {
   name: 'personmaterial',
@@ -241,7 +241,7 @@ export default {
     },
     // 下载素材
     download (url) {
-      downloadfile('http://192.168.1.34:8000/media/' + url)
+      downloadfile(this.$store.state.mediaURL + url)
     },
     // 上传素材到班级
     upload (id) {

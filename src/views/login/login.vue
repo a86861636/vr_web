@@ -44,10 +44,10 @@ export default {
     return {
       options: ['教师', '助教'],
       form: {
-        phoneNumber: '13247662414',
-        password: '222222',
+        phoneNumber: '',
+        password: '',
         type: '教师',
-        tAssistantCode: '178493'
+        tAssistantCode: ''
       }
     }
   },

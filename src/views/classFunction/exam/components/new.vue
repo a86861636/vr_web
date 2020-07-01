@@ -25,8 +25,9 @@
       <div class="typeSwtich">
         <el-radio v-model="type" :label="1">公共题库</el-radio>
         <el-radio v-model="type" :label="2">私人题库</el-radio>
+        <el-radio v-model="type" :label="3">随机生成</el-radio>
       </div>
-      <div class="question-box">
+      <div class="question-box" v-if="type!==3">
         <div v-if="type==1">
           <div v-for="(item,index) in publicBank" :key="index" :class="{ 'question-item':true,'active': item.active }" @click="item.active=!item.active">{{item.name}}</div>
           <img v-if="publicBank.length==0" class="nodata" src="@/assets/classFunciton/none.png" />
@@ -36,6 +37,35 @@
           <img v-if="personalBank.length==0" class="nodata" src="@/assets/classFunciton/none.png" />
         </div>
       </div>
+      <div v-if="type==3" style="margin-top: 20px;">
+          <el-form ref="randomForm" :model="randomForm" :rules="rules" label-width="100px">
+            <el-form-item label="题库选择" prop="source">
+              <el-select v-model="randomForm.source" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="公共数量" v-if="randomForm.source==2" prop="public_num">
+              <el-input-number v-model="randomForm.public_num" :min="0"></el-input-number>
+            </el-form-item>
+            <el-form-item label="个人数量" v-if="randomForm.source==2" prop="personal_num">
+              <el-input-number v-model="randomForm.personal_num" :min="0"></el-input-number>
+            </el-form-item>
+            <el-form-item label="单选数量" prop="single_num">
+              <el-input-number v-model="randomForm.single_num" :min="0"></el-input-number>
+            </el-form-item>
+            <el-form-item label="多选数量" prop="multiple_num">
+              <el-input-number v-model="randomForm.multiple_num" :min="0"></el-input-number>
+            </el-form-item>
+            <el-form-item label="简答数量" prop="simple_num">
+              <el-input-number v-model="randomForm.simple_num" :min="0"></el-input-number>
+            </el-form-item>
+          </el-form>
+        </div>
       <div class="btnBox">
         <el-button type="primary" @click="lastPart">上一步</el-button>
         <el-button type="primary" @click="nextPart">下一步</el-button>
@@ -71,6 +101,26 @@ export default {
     return {
       mode: 1,
       type: 1,
+      options: [{
+        value: 0,
+        label: '公共题库'
+      }, {
+        value: 1,
+        label: '个人题库'
+      }, {
+        value: 2,
+        label: '所有题库'
+      }],
+      randomForm: {
+        teacher_id: '',
+        academy_id: '',
+        source: 2,
+        single_num: 0,
+        multiple_num: 0,
+        simple_num: 0,
+        personal_num: 0,
+        public_num: 0
+      },
       form: {
         paper_name: '',
         note: '',
@@ -144,6 +194,10 @@ export default {
           break
         case 2:
           this.selectedQus = []
+          if (this.type === 3) {
+            this.getRandom()
+            return false
+          }
           for (let item of this.publicBank) {
             if (item.active) {
               this.selectedQus.push(item)
@@ -165,28 +219,67 @@ export default {
     },
     handleData (data, source) {
       let res = []
-      for (let i = 0; i < data.id.length; i++) {
-        let item = {
-          id: data.id[i],
-          name: data.name[i],
-          type: data.type[i],
-          note: data.note[i],
-          rightanswer: data.rightanswer[i],
-          answers: [
-            data.answer1[i],
-            data.answer2[i],
-            data.answer3[i],
-            data.answer4[i],
-            data.answer5[i],
-            data.answer6[i]
-          ],
-          score: 0,
-          source: source,
-          active: this.selectedId[source].indexOf(data.id[i]) > -1
+      if (source === 0 || source === 1) {
+        for (let i = 0; i < data.id.length; i++) {
+          let item = {
+            id: data.id[i],
+            name: data.name[i],
+            type: data.type[i],
+            note: data.note[i],
+            rightanswer: data.rightanswer[i],
+            answers: [
+              data.answer1[i],
+              data.answer2[i],
+              data.answer3[i],
+              data.answer4[i],
+              data.answer5[i],
+              data.answer6[i]
+            ],
+            score: 0,
+            source: source,
+            active: this.selectedId[source].indexOf(i.id) > -1
+          }
+          res.push(item)
         }
-        res.push(item)
+      } else {
+        for (let i of data) {
+          let item = {
+            id: i.id,
+            name: i.exam_name,
+            type: i.exam_type_id,
+            note: i.exam_note,
+            rightanswer: i.exam_rightanswer,
+            answers: [
+              i.exam_answer1,
+              i.exam_answer2,
+              i.exam_answer3,
+              i.exam_answer4,
+              i.exam_answer5,
+              i.exam_answer6
+            ],
+            score: 0,
+            source: i.source,
+            active: true
+          }
+          res.push(item)
+        }
       }
       return res.reverse()
+    },
+    getRandom () {
+      let data = this.randomForm
+      data.url = 'exam/random/'
+      data.trans = true
+      data.teacher_id = this.$store.state.userInfo.tloginid
+      data.academy_id = this.$store.state.userInfo.academy_id
+      this.$store.dispatch('post', data).then((res) => {
+        this.selectedQus = this.handleData(res.data)
+        this.mode++
+      }).catch(res => {
+        this.$message({
+          message: '数据输入有误'
+        })
+      })
     },
     getPersonalBank () {
       let data = {
@@ -231,6 +324,10 @@ export default {
       this.$store.dispatch('post', data).then((res) => {
         this.$emit('fresh')
         this.$emit('close')
+        this.$message({
+          type: 'success',
+          message: '创建成功'
+        })
       })
     }
   }

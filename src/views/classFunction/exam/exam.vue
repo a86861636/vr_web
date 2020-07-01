@@ -181,9 +181,9 @@ export default {
     // 数字转中文 @param {Array} value value[0]为按钮文本 value[1]当行数据obj
     trans (param) {
       if (param) {
-        return '已提交'
+        return '已批改'
       } else {
-        return '未提交'
+        return '未批改'
       }
     },
     // 发布试卷
@@ -273,14 +273,8 @@ export default {
         this.detail_id = data.release_paper_id
         this.getDetail(data.release_paper_id)
       } else if (type === '批改') {
-        if (data.is_handle) {
-          this.checkDialog = true
-          this.checkInfo = data
-        } else {
-          this.$message({
-            message: '学生没有提交'
-          })
-        }
+        this.checkDialog = true
+        this.checkInfo = data
       } else if (type === '发布') {
         this.releaseForm.exampaperid = data.paper_id
         this.releaseDialog = true

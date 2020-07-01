@@ -53,7 +53,7 @@ import ppt from '@/assets/history/ppt.png'
 import video from '@/assets/history/video.png'
 import excel from '@/assets/history/excel.png'
 import txt from '@/assets/history/txt.png'
-import downloadfile from 'downloadjs'
+import downloadfile from '@/utils/utils.js'
 
 export default {
   name: 'publicmaterial',
@@ -209,7 +209,7 @@ export default {
       }
     },
     download (url) {
-      downloadfile('http://192.168.1.34:8000/media/' + url)
+      downloadfile(this.$store.state.mediaURL + url)
     }
   },
   mounted () {

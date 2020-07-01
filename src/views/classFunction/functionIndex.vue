@@ -82,7 +82,7 @@ export default {
           name: '申请加分',
           path: '/addPoint',
           msgNumber: 0,
-          msgName: '',
+          msgName: 'member_list',
           img: require('@/assets/classFunciton/add.png')
         }
       ],

@@ -149,6 +149,9 @@ export default {
 .subject:first-child{
   margin-top: 0px;
 }
+.subject{
+  margin-top: 20px;
+}
 .option{
   margin-top: 10px;
   color: #A7A7A7;
