@@ -194,8 +194,8 @@ export default {
       this.selectval = value
       this.getList(this.selectval)
     },
-    download (url) {
-      downloadfile(this.$store.state.mediaURL + url)
+    download (path) {
+      downloadfile(this.$store.state.mediaURL + path, path.split('/').reverse()[0])
     },
     unpublish (id) {
       console.log(id)

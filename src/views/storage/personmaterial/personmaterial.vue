@@ -240,8 +240,8 @@ export default {
       })
     },
     // 下载素材
-    download (url) {
-      downloadfile(this.$store.state.mediaURL + url)
+    download (path) {
+      downloadfile(this.$store.state.mediaURL + path, path.split('/').reverse()[0])
     },
     // 上传素材到班级
     upload (id) {

@@ -74,11 +74,16 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     console.log(this.$route.query)
     this.getPaper()
   },
   props: ['stuId', 'paperId'],
+  watch: {
+    stuId () {
+      this.getPaper()
+    }
+  },
   methods: {
     handlePaperData (list) {
       for (let item of list) {

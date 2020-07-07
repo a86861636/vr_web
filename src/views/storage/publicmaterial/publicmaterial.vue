@@ -208,8 +208,9 @@ export default {
         this.getList(undefined, value[0], -1)
       }
     },
-    download (url) {
-      downloadfile(this.$store.state.mediaURL + url)
+    // 下载素材
+    download (path) {
+      downloadfile(this.$store.state.mediaURL + path, path.split('/').reverse()[0])
     }
   },
   mounted () {

@@ -109,10 +109,16 @@ export default {
         star: this.form.star + ''
       }
       this.$store.dispatch('post', data).then((res) => {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
+        if (res.code === 200) {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: res.msg
+          })
+        }
         this.passDialog = false
         this.getList()
       })

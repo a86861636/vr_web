@@ -1,15 +1,14 @@
 import axios from 'axios'
-export default function downloadfile (url) {
+export default function downloadfile (url, fileName) {
   let params = {}
   axios.post(url, params, { responseType: 'blob' })
     .then(res => {
       let content = res.data
       let blob = new Blob([content])
-      let fileName = url
       if ('download' in document.createElement('a')) {
         // 非IE下载
         let elink = document.createElement('a')
-        elink.download = fileName
+        elink.download = fileName || url
         elink.style.display = 'none'
         elink.href = URL.createObjectURL(blob)
         document.body.appendChild(elink)

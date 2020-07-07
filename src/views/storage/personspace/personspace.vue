@@ -16,7 +16,7 @@
         <el-button type="danger" size="small">上传素材</el-button>
       </div>
     </div>
-    <div class="list" v-for="item in radiodata" :key="item.id" v-if="radiodata.length!==0">
+    <div class="list" v-for="item in radiodata" :key="item.id">
       <img :src="showcatelogy(item.materialurl)" class="icon">
       <span class="listfont">{{item.name}}</span>
       <div class="funicon">
@@ -221,8 +221,9 @@ export default {
         })
       })
     },
-    download (url) {
-      downloadfile(this.$store.state.mediaURL + url)
+    // 下载素材
+    download (path) {
+      downloadfile(this.$store.state.mediaURL + path, path.split('/').reverse()[0])
     }
   },
   mounted () {
