@@ -1,14 +1,17 @@
 <template>
   <div class="header">
     <div class="left">
-      <img src="@/assets/header/logo.png" />
+      <img class="logo" src="@/assets/index/logo.png" />
     </div>
     <div class="right">
       <img class="icon" :src="faceUrl">
-      <el-tooltip class="item" effect="dark" content="课表" placement="bottom">
-        <img class="icon" src="@/assets/header/date.png" @click="toPath('/course')" />
+      <el-tooltip class="item" effect="dark" content="首页" placement="bottom">
+        <img class="icon" src="@/assets/header/home.png" @click="toPath('/index')" />
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="空间" placement="bottom">
+      <el-tooltip class="item" effect="dark" content="课表" placement="bottom">
+        <img class="icon" src="@/assets/header/date.png" @click="toPath('/timetable')" />
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="空间" v-if="userType==='t'" placement="bottom">
         <img class="icon" src="@/assets/header/file.png" @click="toPath('/storage')" />
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="登出" placement="bottom">
@@ -28,7 +31,10 @@ export default {
   },
   computed: {
     faceUrl () {
-      return this.$store.state.mediaURL + this.$store.state.userInfo.teacher_picteacher_pic
+      return this.$store.state.mediaURL + this.$store.state.userInfo.pic
+    },
+    userType () {
+      return this.$store.state.userInfo.user_type
     }
   },
   methods: {
@@ -62,8 +68,13 @@ export default {
   display: flex;
   flex-direction: row;
 }
+.logo{
+  width: 40px;
+  height: 30px;
+}
 .icon{
   width: 20px;
+  height: 20px;
   margin-left: 22px;
   cursor: pointer;
 }

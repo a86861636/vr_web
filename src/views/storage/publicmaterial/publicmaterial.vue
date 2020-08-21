@@ -96,7 +96,7 @@ export default {
     getList (school_id = 1, subject_id = 1, major_id = 1) {
       let data = {
         url: 'material/public/',
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         subject_id: subject_id,
         school_id: school_id,
         major_id: major_id

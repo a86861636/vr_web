@@ -8,16 +8,18 @@ Vue.use(Vuex) // 使用 vuex
 
 export default new Vuex.Store({
   state: {
-    baseURL: 'http://192.168.1.34:8000/', // 外网服务器//http://www.gbamr.com/
-    mediaURL: 'http://192.168.1.34:8000/media/',
-    videoURL: 'http://192.168.1.34:8000/video/',
+    baseURL: 'http://192.168.8.82:9000/', // 外网服务器//http://www.gbamr.com/
+    mediaURL: 'http://192.168.8.82:9000/media/',
+    videoURL: 'http://192.168.8.82:9000/video/',
     // baseURL: 'http://192.168.8.246:8002/',//本地服务器http://192.168.8.235:8888
     // mediaURL: 'http://192.168.8.246:8002/media/',
     // videoURL: 'http://192.168.8.246:8002/video/',
     userInfo: JSON.parse(window.localStorage.getItem('userInfo')) || {},
     courseInfo: JSON.parse(window.localStorage.getItem('courseInfo')) || {},
     currentTerm: '', // 课表选中学期
-    currentWeek: '' // 课表选中周数
+    currentWeek: '', // 课表选中周数
+    login_show: false,
+    login_mode: 'login'
   },
   mutations: {
 

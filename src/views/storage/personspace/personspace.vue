@@ -71,7 +71,7 @@ export default {
     getList () {
       let data = {
         url: 'myspace/t/',
-        teacherid: this.$store.state.userInfo.tloginid
+        teacherid: this.$store.state.userInfo.id
       }
       console.log(data)
       this.$store.dispatch('get', data).then((res) => {
@@ -175,7 +175,7 @@ export default {
         file_id: id,
         trans: true,
         url: 'myspace/delete/',
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         user_type: 't'
       }
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -206,7 +206,7 @@ export default {
         url: 'myspace/tupload/',
         param: new FormData()
       }
-      data.param.append('teacherid', this.$store.state.userInfo.tloginid)
+      data.param.append('teacherid', this.$store.state.userInfo.id)
       data.param.append('name', file.name)
       data.param.append('typeid', typeid)
       data.param.append('note', '无说明')

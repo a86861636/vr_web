@@ -41,7 +41,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
+  margin-top: 70px;
   min-width: 800px;
 }
 .router-view{

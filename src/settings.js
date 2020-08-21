@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '知行健WEB端',
+  title: '虚拟现实课堂',
 
   /**
    * @type {boolean} true | false

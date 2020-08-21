@@ -1,5 +1,5 @@
 <template>
-  <div class="classFunction">
+  <div class="teacherFunction">
     <el-menu
       :default-active="indexPath"
       class="menu"
@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     isIndex () {
-      return this.$route.path !== '/classFunction/index'
+      return this.$route.path !== '/teacherFunction/index'
     },
     indexPath () {
       return this.$route.path
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     toPath (path) {
-      path = '/classFunction' + path
+      path = '/teacherFunction' + path
       this.$router.push(path)
     }
   }
@@ -72,7 +72,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.classFunction{
+.teacherFunction{
   display: flex;
   flex-direction: row;
 }

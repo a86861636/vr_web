@@ -103,7 +103,7 @@ export default {
     getList () {
       let data = {
         url: 'material/personal/',
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         semester_id: this.$store.state.userInfo.current_semester
       }
       this.$store.dispatch('get', data).then((res) => {
@@ -217,7 +217,7 @@ export default {
     // 删除素材
     deletematerial (id) {
       let data = {
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         trans: true,
         url: 'material/delete/',
         material_id: id
@@ -267,7 +267,7 @@ export default {
       } else {
         let data = {
           url: 'material/publishMaterial/',
-          user_id: this.$store.state.userInfo.tloginid,
+          user_id: this.$store.state.userInfo.id,
           material_id: this.materialid,
           schedule_id: this.value,
           trans: true
@@ -300,7 +300,7 @@ export default {
         url: 'material/tuploadfilenew/',
         param: new FormData()
       }
-      data.param.append('teacherid', this.$store.state.userInfo.tloginid)
+      data.param.append('teacherid', this.$store.state.userInfo.id)
       data.param.append('name', file.name)
       data.param.append('typeid', typeid)
       data.param.append('note', '无说明')

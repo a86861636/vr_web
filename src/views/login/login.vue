@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="top">
-      <img class="name" src="@/assets/login/name.png" />
+      <img class="name" src="@/assets/login/logo.png" />
       <div class="text">课堂教学辅助系统</div>
     </div>
     <div class="center">
@@ -18,9 +18,9 @@
           <el-select v-model="form.type" placeholder="请选择" style="width: 100%;">
             <el-option
               v-for="item in options"
-              :key="item"
-              :label="item"
-              :value="item">
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -42,11 +42,17 @@
 export default {
   data () {
     return {
-      options: ['教师', '助教'],
+      options: [{
+        label: '教师',
+        value: 't'
+      }, {
+        label: '学生',
+        value: 's'
+      }],
       form: {
         phoneNumber: '',
         password: '',
-        type: '教师',
+        type: 't',
         tAssistantCode: ''
       }
     }
@@ -65,28 +71,25 @@ export default {
     },
     login () {
       let data = {
-        url: 'login/tlogin/',
+        url: 'login/login/',
         trans: true,
         phoneNumber: this.form.phoneNumber,
-        password: this.form.password
+        password: this.form.password,
+        user_type: this.form.type,
+        assistant_code: ''
       }
       this.$store.dispatch('post', data).then((res) => {
-        console.log(res.tloginid)
-        if (res.tloginid) {
-          this.userInfo = res
-          this.$store.state.userInfo = res
-          this.userInfo.assistantMode = false
-          console.log(this.userInfo)
-          if (this.form.type === '助教') {
-            this.beAssistant()
-          } else if (this.form.type === '教师') {
-            this.saveUserInfo()
-            this.$router.push('/course')
-            this.$message({
-              message: '登录成功',
-              type: 'success'
-            })
-          }
+        // console.log(res.user_id)
+        if (res.data) {
+          res.data.user_type = data.user_type
+          this.userInfo = res.data
+          this.$store.state.userInfo = res.data
+          this.saveUserInfo()
+          this.$router.push('/timetable')
+          this.$message({
+            message: '登录成功',
+            type: 'success'
+          })
         } else {
           this.$message({
             message: '用户名或密码错误',
@@ -102,23 +105,23 @@ export default {
         url: 'login/tassistant/',
         trans: true,
         assistant6code: this.form.tAssistantCode,
-        user_id: this.userInfo.tloginid
+        user_id: this.userInfo.id
       }
       this.$store.dispatch('post', data).then((res) => {
         if (res.teacherid) {
-          this.userInfo.userid = this.userInfo.tloginid// 换个地方保存本账号id
+          this.userInfo.userid = this.userInfo.id// 换个地方保存本账号id
           this.userInfo.usertoken = this.userInfo.token // 换个地方保存本账号token
           this.userInfo.assistantMode = true// 助教模式开启
           this.userInfo.tAssistantCode = this.form.tAssistantCode
           this.userInfo.assistedTeacherName = res.teachername
-          this.userInfo.tloginid = res.teacherid
+          this.userInfo.id = res.teacherid
           this.userInfo.token = res.token
           this.saveUserInfo()
           this.$message({
             message: '登录成功',
             type: 'success'
           })
-          this.$router.push('/course')
+          this.$router.push('/timetable')
         } else {
           this.userInfo = {}
           this.clearInput()

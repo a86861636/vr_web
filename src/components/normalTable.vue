@@ -13,9 +13,9 @@
             {{item}}
           </td>
           <td v-if="tableData.btn" class="btn-box">
-            <span v-for="(btn,btnIndex) in tableData.btn" :key="btnIndex" class="btn" @click="handle(btn,JSON.stringify(tableData.data[listIndex]))">
-              [{{btn}}]
-            </span>
+            <el-button size="mini" v-for="(btn,btnIndex) in tableData.btn" :key="btnIndex" class="btn" @click="handle(btn,JSON.stringify(tableData.data[listIndex]))">
+              {{btn}}
+            </el-button>
           </td>
         </tr>
         <tr v-if="this.isadd===true">
@@ -90,7 +90,7 @@ table {
     }
     td {
       color: #393836;
-      line-height: 12px;
+      line-height: 15px;
     }
   }
 
@@ -105,10 +105,11 @@ table {
   }
 }
 .btn{
+  box-shadow:0px 1px 2px 0px rgba(155,155,155,0.5);
   cursor: pointer;
   display: inline-block;
   white-space: nowrap;
-  line-height: 1.2;
+  margin: 5px 10px;
 }
 .nodata{
   width: 300px;

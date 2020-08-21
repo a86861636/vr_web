@@ -7,60 +7,133 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/index'
+    }, {
+      path: '/index',
+      name: '首页',
+      meta: {
+        nologin: true
+      },
+      component: () => import('@/views/index/index')
+    }, {
+      path: '/course',
+      name: '课程',
+      meta: {
+        nologin: true
+      },
+      component: () => import('@/views/index/course/course')
+    }, {
+      path: '/video',
+      name: '课程',
+      meta: {
+        nologin: true
+      },
+      component: () => import('@/views/index/video/video')
+    }, {
+      path: '/news/content',
+      name: '新闻',
+      meta: {
+        nologin: true
+      },
+      component: () => import('@/views/index/news/content')
+    }, {
+      path: '/news/list',
+      name: '新闻',
+      meta: {
+        nologin: true
+      },
+      component: () => import('@/views/index/news/list')
     }, {
       path: '/login',
       name: '登陆',
+      meta: {
+        nologin: true
+      },
       component: () => import('@/views/login/login')
     }, {
-      path: '/course',
+      path: '/timetable',
       name: '课程表',
       component: Layout,
       children: [{
-        path: '/course',
+        path: '/timetable',
         name: '',
-        component: () => import('@/views/course/course')
+        component: () => import('@/views/timetable/timetable')
       }, {
         name: '课内功能',
-        path: '/classFunction/index',
-        component: () => import('@/views/classFunction/functionIndex'),
+        path: '/teacherFunction/index',
+        component: () => import('@/views/teacherFunction/functionIndex'),
         children: [
           {
             name: '名单',
-            path: '/classFunction/rollRecord',
-            component: () => import('@/views/classFunction/rollRecord/rollRecord')
+            path: '/teacherFunction/rollRecord',
+            component: () => import('@/views/teacherFunction/rollRecord/rollRecord')
           }, {
             name: '试卷',
-            path: '/classFunction/exam',
-            component: () => import('@/views/classFunction/exam/exam')
+            path: '/teacherFunction/exam',
+            component: () => import('@/views/teacherFunction/exam/exam')
           }, {
             name: '投票',
-            path: '/classFunction/vote',
-            component: () => import('@/views/classFunction/vote/vote')
+            path: '/teacherFunction/vote',
+            component: () => import('@/views/teacherFunction/vote/vote')
           }, {
             name: '作业',
-            path: '/classFunction/homework',
-            component: () => import('@/views/classFunction/homework/homework')
+            path: '/teacherFunction/homework',
+            component: () => import('@/views/teacherFunction/homework/homework')
           }, {
             name: '回放',
-            path: '/classFunction/playBack',
-            component: () => import('@/views/classFunction/playBack/playBack')
+            path: '/teacherFunction/playBack',
+            component: () => import('@/views/teacherFunction/playBack/playBack')
           }, {
             name: '投票',
-            path: '/classFunction/vote',
-            component: () => import('@/views/classFunction/vote/vote')
+            path: '/teacherFunction/vote',
+            component: () => import('@/views/teacherFunction/vote/vote')
           }, {
             name: '课堂提问',
-            path: '/classFunction/quiz',
-            component: () => import('@/views/classFunction/quiz/quiz')
+            path: '/teacherFunction/quiz',
+            component: () => import('@/views/teacherFunction/quiz/quiz')
           }, {
             name: '学生疑问',
-            path: '/classFunction/question',
-            component: () => import('@/views/classFunction/question/question')
+            path: '/teacherFunction/question',
+            component: () => import('@/views/teacherFunction/question/question')
           }, {
             name: '加分申请',
-            path: '/classFunction/addPoint',
-            component: () => import('@/views/classFunction/addPoint/addPoint')
+            path: '/teacherFunction/addPoint',
+            component: () => import('@/views/teacherFunction/addPoint/addPoint')
+          }
+        ]
+      }, {
+        name: '课内功能',
+        path: '/studentFunction/index',
+        component: () => import('@/views/studentFunction/functionIndex'),
+        children: [
+          {
+            name: '测验',
+            path: '/studentFunction/exam',
+            component: () => import('@/views/studentFunction/exam/exam')
+          },{
+            name: '作业',
+            path: '/studentFunction/work',
+            component: () => import('@/views/studentFunction/work/work')
+          },{
+            name: '投票',
+            path: '/studentFunction/vote',
+            component: () => import('@/views/studentFunction/vote/vote')
+          },{
+            name: '点名记录',
+            path: '/studentFunction/rollRecord',
+            component: () => import('@/views/studentFunction/rollRecord/rollRecord')
+          },{
+            name: '直播回放',
+            path: '/studentFunction/playBack',
+            component: () => import('@/views/studentFunction/playBack/playBack')
+          },{
+            name: '学生提问',
+            path: '/studentFunction/question',
+            component: () => import('@/views/studentFunction/question/question')
+          },{
+            name: '教师提问',
+            path: '/studentFunction/quiz',
+            component: () => import('@/views/studentFunction/quiz/quiz')
           }
         ]
       }]
@@ -70,7 +143,7 @@ export default new Router({
       component: Layout,
       children: [
         {
-          name: '课内功能',
+          name: '文件管理',
           path: '/storage/index',
           redirect: '/storage/personspace',
           component: () => import('@/views/storage/storageIndex'),

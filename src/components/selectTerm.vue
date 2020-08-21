@@ -64,9 +64,12 @@ export default {
     getdate (date, first) {
       // console.log(this.classTableData.weekCourse)
       let data = {
-        url: 'schedule/theweek/47/' + date + '/',
-        user_id: this.$store.state.userInfo.tloginid,
+        url: 'schedule/theweek/'+ this.$store.state.userInfo.id + '/' + date + '/',
+        user_id: this.$store.state.userInfo.id,
         semester_id: this.currentTerm.id || ''
+      }
+      if (this.$store.state.userInfo.user_type==='s') {
+        data.url = 'schedule/stheweek/' + this.$store.state.userInfo.id + '/' + date + '/'
       }
       this.$store.dispatch('get', data).then((res) => {
         console.log(res)

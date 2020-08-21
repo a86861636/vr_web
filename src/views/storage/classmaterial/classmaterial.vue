@@ -82,7 +82,7 @@ export default {
     getList (sch_id = '') {
       let data = {
         url: 'material/class/',
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         semester_id: this.$store.state.userInfo.current_semester,
         schedule_id: sch_id
         // schedule_id: this.$store.state.courseInfo.dbid
@@ -203,11 +203,11 @@ export default {
         url: 'material/unpublishMaterial/',
         // param: new FormData()
         class_material_id: id,
-        user_id: this.$store.state.userInfo.tloginid,
+        user_id: this.$store.state.userInfo.id,
         trans: true
       }
       // data.param.append('class_material_id', id)
-      // data.param.append('user_id', this.$store.state.userInfo.tloginid)
+      // data.param.append('user_id', this.$store.state.userInfo.id)
       console.log(data)
       this.$confirm('此操作将从班级素材撤销该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
